@@ -248,22 +248,31 @@ class AudioExtractor:
         import yt_dlp
 
         ydl_opts = {
-            "format":            "bestaudio/best",
-            "outtmpl":           output_path + ".%(ext)s",
-            "quiet":             False,
-            "no_warnings":       False,
-            "noplaylist":        True,
-            "retries":           10,
-            "fragment_retries":  10,
+            "format": "bestaudio/best",
+            "outtmpl": output_path + ".%(ext)s",
+
+            "quiet": False,
+            "no_warnings": False,
+            "noplaylist": True,
+
+            "retries": 10,
+            "fragment_retries": 10,
             "extractor_retries": 10,
-            "http_headers": {
-                "User-Agent": (
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/137.0.0.0 Safari/537.36"
-                ),
+
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["android", "web"]
+                }
             },
-        }
+
+    "http_headers": {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/137.0.0.0 Safari/537.36"
+        ),
+    },
+}
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             print("=" * 60)
