@@ -21,7 +21,6 @@ class WhisperService:
     def __init__(self):
         self.model = None
         self.enabled = False
-        self._load_model()
 
     def _load_model(self):
         try:
@@ -41,6 +40,13 @@ class WhisperService:
         except Exception as e:
             print(f"⚠️ Whisper model load failed: {e}")
 
+    def ensure_loaded(self):
+        """
+        Load Whisper only when first needed.
+        """
+        if self.model is None:
+            self._load_model()
+
     # ── Main Transcription ─────────────────────────────────────────────────
 
     async def transcribe_file(
@@ -49,6 +55,8 @@ class WhisperService:
         language: Optional[str] = None,
         current_time_offset: float = 0.0,
     ) -> List[Dict]:
+
+        self.ensure_loaded()
 
         if not self.enabled or not self.model:
             return []

@@ -56,11 +56,6 @@ class QdrantService:
 
         # ── Embedding model ────────────────────────────────────────────────
         try:
-            from sentence_transformers import SentenceTransformer
-
-            self.encoder = SentenceTransformer("BAAI/bge-small-en-v1.5")
-            print("✅ SentenceTransformer loaded")
-
         except Exception as e:
             print(f"⚠️ Failed to load embedding model: {e}")
             return
@@ -148,6 +143,16 @@ class QdrantService:
         except Exception as e:
             print(f"⚠️ Collection init failed: {e}")
 
+    def ensure_encoder_loaded(self):
+        """
+        Load embedding model only when first needed.
+        """
+        if self.encoder is None:
+            from sentence_transformers import SentenceTransformer
+
+            self.encoder = SentenceTransformer("BAAI/bge-small-en-v1.5")
+            print("✅ SentenceTransformer loaded")
+
     # =========================================================================
     # EMBEDDING
     # =========================================================================
@@ -179,10 +184,13 @@ class QdrantService:
         return "\n\n".join(parts) if parts else summary
 
     def _embed(self, text: str) -> List[float]:
+        self.ensure_encoder_loaded()
+
         vector = self.encoder.encode(
             text,
             normalize_embeddings=True,
         )
+
         return vector.tolist()
 
     # =========================================================================
