@@ -54,12 +54,6 @@ class QdrantService:
         self.collection_name = "watch_party_memory"
         self.vector_size     = 384
 
-        # ── Embedding model ────────────────────────────────────────────────
-        try:
-        except Exception as e:
-            print(f"⚠️ Failed to load embedding model: {e}")
-            return
-
         # ── Qdrant client ──────────────────────────────────────────────────
         try:
             from qdrant_client import QdrantClient
